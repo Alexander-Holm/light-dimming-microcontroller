@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "author": "Alexander Holm",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 0, "left": 0, "attrs": {} },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -218.03,
+      "left": 116.34,
+      "attrs": { "color": "white", "lightColor": "red" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": -159.8,
+      "left": 316.55,
+      "attrs": {
+        "color": "red",
+        "label": "Press to turn light on/off. Hold to adjust brightness.",
+        "bounce": "0"
+      }
+    },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd2",
+      "top": -165.2,
+      "left": -14.54,
+      "attrs": { "pins": "i2c" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": -186.16,
+      "left": 182.14,
+      "attrs": { "value": "220" }
+    }
+  ],
+  "connections": [
+    [ "uno:GND.1", "led1:C", "black", [ "v-20.97", "h-169.83", "v-154.73" ] ],
+    [ "btn1:1.l", "uno:13", "red", [ "h-13.55", "v128.83", "h-178" ] ],
+    [ "uno:GND.1", "btn1:2.l", "black", [ "v-21.63", "h194.83", "v-115.17" ] ],
+    [ "uno:GND.1", "lcd2:GND", "black", [ "v-20.97", "h-169.83", "v-121.23" ] ],
+    [ "uno:5V", "lcd2:VCC", "white", [ "v34.53", "h-197", "v-349.73" ] ],
+    [ "lcd2:SCL", "uno:A5", "limegreen", [ "h-11.13", "v314.07", "h277.17" ] ],
+    [ "lcd2:SDA", "uno:A4", "limegreen", [ "h-17.79", "v330.9", "h274.33" ] ],
+    [ "led1:A", "r1:1", "red", [ "v0" ] ],
+    [ "r1:2", "uno:11", "red", [ "v0.19", "h51.39", "v152.66", "h-148.33" ] ]
+  ]
+}
