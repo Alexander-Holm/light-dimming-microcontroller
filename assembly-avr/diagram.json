@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "author": "Alexander Holm",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 0, "left": 0.67, "attrs": {} },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -57.72,
+      "left": 140.99,
+      "attrs": { "color": "white", "lightColor": "blue" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": -43.53,
+      "left": 270.8,
+      "attrs": { "color": "red", "bounce": "0" }
+    }
+  ],
+  "connections": [
+    [ "uno:GND.1", "led1:C", "black", [ "v0" ] ],
+    [ "uno:6", "led1:A", "green", [ "h0.16", "v-34.05" ] ],
+    [ "uno:13", "btn1:1.l", "red", [ "v-15.13", "h120.33", "v-32" ] ],
+    [ "btn1:2.l", "uno:GND.3", "black", [ "h0.53", "v60.07", "h11.33", "v161.33", "h-102.67" ] ]
+  ]
+}
