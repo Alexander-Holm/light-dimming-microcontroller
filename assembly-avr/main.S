@@ -1,11 +1,11 @@
-; WIP
 ; Assembly AVR: https://ww1.microchip.com/downloads/en/devicedoc/atmel-0856-avr-instruction-set-manual.pdf
 ; 16MHz clock frequency
 
+; __SFR_OFFSET används inte i koden men måste ändå sättas till 0
 #define __SFR_OFFSET 0
 #include "avr/io.h"
 
-#define BRIGTHNESS_MIN 0
+#define BRIGTHNESS_MIN 0 ; brightness 0 stänger inte av lampan
 #define BRIGTHNESS_MAX 255
 #define DIM_DELAY 200
 
@@ -27,12 +27,12 @@
   https://sourceware.org/binutils/docs-2.18/as/AVR_002dModifiers.html
   Båda sätts till så många ms som ska väntas med lo8() och hi8()
   Exempel för 100ms:
-  ldi waitAmount_lo8, lo8(100) 
-  ldi waitAmount_hi8, hi8(100)
+  ldi waitMs_lo8, lo8(100) 
+  ldi waitMs_hi8, hi8(100)
 
 */
-#define waitAmount_lo8 r24
-#define waitAmount_hi8 r25
+#define waitMs_lo8 r24
+#define waitMs_hi8 r25
 ; r26 och r27 (X-register) används av funktionen wait
 
 .global setup
@@ -69,8 +69,8 @@ loop:
     jmp turnLightOn ; hoppa över om (bit == 1) = pin-mode:output
   
   ; Vänta och kolla om knappen fortfarande hålls ner
-  ldi waitAmount_lo8, lo8(DIM_DELAY)
-  ldi waitAmount_hi8, hi8(DIM_DELAY)
+  ldi waitMs_lo8, lo8(DIM_DELAY)
+  ldi waitMs_hi8, hi8(DIM_DELAY)
   call wait
   sbic PINB, PIN_BUTTON
     jmp turnLightOff; Har knappen släppts släcks LED
@@ -92,23 +92,22 @@ turnLightOff:
   cbi DDRD, PIN_LED
   jmp endLoop
 adjustBrightness:
-  1: ; do
-  add brightness, brightnessAdjustment 
-	out LED_PWM, brightness
-  ldi waitAmount_lo8, lo8(20)
-  ldi waitAmount_hi8, hi8(20)
-  call wait
+  add brightness, brightnessAdjustment
 
-  ; while
   ; Går ur loopen om något condition är true
   sbic PINB, PIN_BUTTON
     jmp 2f
   cpi brightness, BRIGTHNESS_MIN
     breq 2f
   cpi brightness, BRIGTHNESS_MAX
-    breq 2f    
+    breq 2f   
 
-  rjmp 1b; Alla conditions false, fortsätt loopa
+	out LED_PWM, brightness
+  ldi waitMs_lo8, lo8(20)
+  ldi waitMs_hi8, hi8(20)
+  call wait
+
+  jmp adjustBrightness;
   2: ; Gå ur loop
   neg brightnessAdjustment; Nästa gång ska ljusstyrkan ändras åt andra hållet
   jmp endLoop
@@ -129,7 +128,7 @@ waitForButtonRelease:
 
 
 
-; --- ---
+; --- Wait ---
 
 wait:
   /*
@@ -155,7 +154,7 @@ wait:
   nop                     ; 1 cycle efter loopen pga. sista brne
 
   ; outer loop            ; Totalt: 8 cycles = 6 (outer loop) + 2 (setup)
-  sbiw waitAmount_lo8, 1  ; 2 cycles
+  sbiw waitMs_lo8, 1  ; 2 cycles
   nop                     ; 1 cycle
   nop                     ; 1 cycle
   brne 1b                 ; 2 cycles (1 för sista utan branch)

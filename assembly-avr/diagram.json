@@ -7,22 +7,35 @@
     {
       "type": "wokwi-led",
       "id": "led1",
-      "top": -57.72,
-      "left": 140.99,
-      "attrs": { "color": "white", "lightColor": "blue" }
+      "top": -67.06,
+      "left": 101,
+      "attrs": { "color": "white", "lightColor": "red" }
     },
     {
       "type": "wokwi-pushbutton",
       "id": "btn1",
-      "top": -43.53,
-      "left": 270.8,
-      "attrs": { "color": "red", "bounce": "0" }
+      "top": -40.86,
+      "left": 282.13,
+      "attrs": {
+        "color": "red",
+        "label": "Press to turn light on/off. Hold to adjust brightness.",
+        "bounce": "0"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": -30.68,
+      "left": 135.72,
+      "attrs": { "value": "220" }
     }
   ],
   "connections": [
     [ "uno:GND.1", "led1:C", "black", [ "v0" ] ],
-    [ "uno:6", "led1:A", "green", [ "h0.16", "v-34.05" ] ],
     [ "uno:13", "btn1:1.l", "red", [ "v-15.13", "h120.33", "v-32" ] ],
-    [ "btn1:2.l", "uno:GND.3", "black", [ "h0.53", "v60.07", "h11.33", "v161.33", "h-102.67" ] ]
-  ]
+    [ "uno:GND.3", "btn1:2.l", "black", [ "v14.5", "h99.16", "v-214.86" ] ],
+    [ "uno:6", "r1:2", "green", [ "v0" ] ],
+    [ "led1:A", "r1:1", "green", [ "v0" ] ]
+  ],
+  "dependencies": {}
 }
